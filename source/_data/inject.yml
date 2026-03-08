@@ -1,0 +1,12 @@
+<meting-js
+  server="netease"
+  type="playlist"
+  id="7322499697"
+  fixed="true"
+  autoplay="false"
+  theme="#e85d75"
+  loop="all"
+  order="random"
+  preload="auto"
+  volume="0.7">
+</meting-js>

@@ -1,0 +1,119 @@
+/* 全局背景图 */
+#web_bg {
+  background: url('/img/bg.jpg') center center / cover fixed !important;
+}
+
+/* 主体背景透明 */
+#body-wrap {
+  background: transparent !important;
+}
+
+body {
+  background: transparent !important;
+}
+
+/* 卡片毛玻璃 - 加深底色让文字清晰 */
+.recent-post-item,
+#aside-content .card-widget {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 文字颜色恢复深色 */
+.recent-post-item .content .title a {
+  color: #2c2c2c !important;
+  text-shadow: none !important;
+}
+
+/* footer */
+#footer {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  color: #eee !important;
+}
+
+/* 暗黑模式卡片 */
+[data-theme="dark"] .recent-post-item,
+[data-theme="dark"] #aside-content .card-widget {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 暗黑模式文字改成白色 */
+[data-theme="dark"] .recent-post-item .content .title a,
+[data-theme="dark"] .recent-post-item .content .recent-post-info,
+[data-theme="dark"] #aside-content .card-widget,
+[data-theme="dark"] #aside-content .card-widget span,
+[data-theme="dark"] #aside-content .card-widget a {
+  color: #eee !important;
+}
+
+/* 暗黑模式公告文字 */
+[data-theme="dark"] #aside-content .card-announcement .announcement-content {
+  color: #ddd !important;
+}
+
+/* 亮色模式文字深色 */
+[data-theme="light"] .recent-post-item .content .title a,
+[data-theme="light"] #aside-content .card-widget span,
+[data-theme="light"] #aside-content .card-widget a {
+  color: #2c2c2c !important;
+}
+
+/* 暗黑模式播放器文字 */
+[data-theme="dark"] .aplayer,
+[data-theme="dark"] .aplayer-list,
+[data-theme="dark"] .aplayer-info,
+[data-theme="dark"] .aplayer-title,
+[data-theme="dark"] .aplayer-author,
+[data-theme="dark"] .aplayer-list li {
+  background: rgba(30, 30, 40, 0.8) !important;
+  color: #eee !important;
+}
+
+[data-theme="dark"] .aplayer-list li:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .aplayer-list-author {
+  color: #aaa !important;
+}
+
+[data-theme="dark"] .aplayer-list-index {
+  color: #888 !important;
+}
+
+@keyframes ripple-effect {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes fade-out {
+  0%   { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* 让粒子层在图片上方 */
+#page-header #particles-js {
+  pointer-events: none;
+}
+
+/* 标题层级确保在粒子上方 */
+#page-header .full-bg-img,
+#page-header #site-info {
+  position: relative;
+  z-index: 2;
+}
+
+#site-info {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+#typed-subtitle {
+  display: block !important;
+  visibility: visible !important;
+}
