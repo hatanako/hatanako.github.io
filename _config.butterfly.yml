@@ -995,10 +995,10 @@ note:
 
 # https://github.com/MoOx/pjax
 pjax:
-  enable: false
-  # Exclude the specified pages from pjax, such as '/music/'
+  enable: true
   exclude:
-    # - /xxxxxx/
+    - /music/
+    - /no-pjax/
 
 # Inject the css and script (aplayer/meting)
 aplayerInject:
@@ -1073,8 +1073,11 @@ inject:
     - <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
   bottom:
     - <script src="/js/typed.min.js"></script>
+    - <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"></script>
+    - <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
     - <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
     - <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+    - <meting-js server="netease" type="playlist" id="7322499697" fixed="true" mini="true" autoplay="false" loop="all" order="random" volume="0.2" preload="auto" theme="#e85d75"></meting-js>
     - <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     - <script src="/js/effects.js"></script>
     # - <link rel="stylesheet" href="/xxx.css">

@@ -1,3 +1,27 @@
+// ==================
+// 0. 入场加载特效
+// ==================
+;(function () {
+  // 创建遮罩
+  const loader = document.createElement('div')
+  loader.id = 'page-loader'
+  loader.innerHTML = `
+    <div class="loader-content">
+      <div class="loader-circle"></div>
+      <div class="loader-text">垃圾回收厂</div>
+    </div>
+  `
+  document.body.appendChild(loader)
+
+  // 页面加载完毕后淡出
+  window.addEventListener('load', function () {
+    setTimeout(() => {
+      loader.style.opacity = '0'
+      setTimeout(() => loader.remove(), 800)
+    }, 500)
+  })
+})()
+
 document.addEventListener('DOMContentLoaded', function () {
 
   // ==================
@@ -160,13 +184,6 @@ function initTyped() {
     })
   }
 
-  function waitForTyped() {
-    if (typeof Typed !== 'undefined') {
-      initTyped()
-    } else {
-      setTimeout(waitForTyped, 100)
-    }
-  }
 
   waitForTyped()
 })

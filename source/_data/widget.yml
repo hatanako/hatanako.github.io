@@ -1,6 +1,1 @@
 top:
-  - class_name: card-music
-    id_name: card-music
-    name: 音乐
-    icon: fas fa-music
-    html: '<meting-js server="netease" type="playlist" id="7322499697" loop="all" order="random" volume="0.7" preload="auto" theme="#e85d75"></meting-js>'
