@@ -303,7 +303,7 @@ aside:
   card_announcement:
     enable: true
     notification: true
-    content: 欢迎来到垃圾回收厂（X），这是我用来记录一些平时的笔记和想法的一个小网站。（其实是我太健忘了）</br> 那些文章全是我从我自己的<a href="https://blog.csdn.net/2504_92226519">CSDN</a>上搬过来的，但是注释全没有了QAQ，哪天有空了再搞（）
+    content: 欢迎来到<s>垃圾回收厂</s>，这是我用来记录一些平时的笔记和想法的一个小网站。（其实是我太健忘了）</br> 那些文章全是我从我自己的<a href="https://blog.csdn.net/2504_92226519">CSDN</a>上搬过来的，但是注释全没有了QAQ，哪天有空了再搞（）
   card_recent_post:
     enable: true
     # If set 0 will show all
