@@ -544,7 +544,7 @@ comments:
   # Leave it empty if you don't need comments
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
   # Format of two comments system : Disqus,Waline
-  use:
+  use: Giscus
   # Display the comment name next to the button
   text: true
   # Lazyload: The comment system will be load when comment element enters the browser's viewport.
@@ -641,13 +641,16 @@ twikoo:
 # Giscus
 # https://giscus.app/
 giscus:
-  repo:
-  repo_id:
-  category_id:
-  light_theme: light
-  dark_theme: dark
-  js:
-  option:
+  repo: hatanako/hatanako.github.io
+  repo_id: R_kgDORgsVWg
+  category_id: DIC_kwDORgsVWs4C34Xd
+  category: Announcements
+  mapping: pathname
+  reactions_enabled: 1
+  emit_metadata: 0
+  lang: zh-CN
+  theme: preferred_color_scheme
+  position: top
 
 # Remark42
 # https://remark42.com/docs/configuration/frontend/
@@ -1082,6 +1085,7 @@ inject:
     - <script src="/js/effects.js"></script>
     # - <link rel="stylesheet" href="/xxx.css">
     # - <script src="xxxx"></script>
+
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
