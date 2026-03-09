@@ -184,6 +184,14 @@ function initTyped() {
     })
   }
 
+  function waitForTyped() {
+    if (typeof Typed !== 'undefined') {
+      initTyped()
+    } else {
+      setTimeout(waitForTyped, 100)
+    }
+  }
+
 
   waitForTyped()
 })
