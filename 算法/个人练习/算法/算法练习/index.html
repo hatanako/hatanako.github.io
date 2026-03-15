@@ -1,0 +1,635 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>算法练习：一（会有后续吗） | 垃圾回收厂</title><meta name="author" content="Hatanako"><meta name="copyright" content="Hatanako"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这篇文章的起因是因为我突然想了解一下RougeLike游戏的地图是怎么生成的，然后我就跑去问AI了。嗯然后我发现，我脑子转不过来生锈了全部看不懂！，于是我让AI帮我重新复习巩固特训一下嗯没错就是这样，下面的所有内容基本上是我和AI的聊天记录。谁家写文章直接贴自己和AI聊天记录的 注：这AI是Claude，感觉拿AI学算法还挺好使的（？  我：对于算法层面我应该怎么学习呢，我感觉我的逻辑思路经常会跟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法练习：一（会有后续吗）">
+<meta property="og:url" content="https://hatanako.github.io/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="垃圾回收厂">
+<meta property="og:description" content="这篇文章的起因是因为我突然想了解一下RougeLike游戏的地图是怎么生成的，然后我就跑去问AI了。嗯然后我发现，我脑子转不过来生锈了全部看不懂！，于是我让AI帮我重新复习巩固特训一下嗯没错就是这样，下面的所有内容基本上是我和AI的聊天记录。谁家写文章直接贴自己和AI聊天记录的 注：这AI是Claude，感觉拿AI学算法还挺好使的（？  我：对于算法层面我应该怎么学习呢，我感觉我的逻辑思路经常会跟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png">
+<meta property="article:published_time" content="2026-03-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-15T11:10:05.269Z">
+<meta property="article:author" content="Hatanako">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "算法练习：一（会有后续吗）",
+  "url": "https://hatanako.github.io/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/",
+  "image": "https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png",
+  "datePublished": "2026-03-14T16:00:00.000Z",
+  "dateModified": "2026-03-15T11:10:05.269Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hatanako",
+      "url": "https://hatanako.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://hatanako.github.io/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '算法练习：一（会有后续吗）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background: transparent;"></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">垃圾回收厂</span></a><a class="nav-page-title" href="/"><span class="site-name">算法练习：一（会有后续吗）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">算法练习：一（会有后续吗）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-14T16:00:00.000Z" title="发表于 2026-03-15 00:00:00">2026-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-15T11:10:05.269Z" title="更新于 2026-03-15 19:10:05">2026-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>这篇文章的起因是因为我突然想了解一下RougeLike游戏的地图是怎么生成的，然后我就跑去问AI了。嗯然后我发现，<del>我脑子转不过来生锈了全部看不懂！</del>，于是我让AI帮我重新复习巩固特训一下<br>嗯没错就是这样，下面的所有内容基本上是我和AI的聊天记录。<del>谁家写文章直接贴自己和AI聊天记录的</del></p>
+<p>注：这AI是Claude，感觉拿AI学算法还挺好使的（？</p>
+<hr>
+<p>我：对于算法层面我应该怎么学习呢，我感觉我的逻辑思路经常会跟不上，半懂不懂的</p>
+<hr>
+<p>AI：</p>
+<p>这是一个非常真实的感受，而且几乎所有人学算法都会经历这个阶段。我先帮你诊断一下”半懂不懂”通常卡在哪里，然后给你一条适合你的学习路径。</p>
+<p>为什么会”半懂不懂”  </p>
+<ul>
+<li>算法学习卡壳，通常不是因为你不够聪明，而是因为跳过了某一层基础，在更高层硬撑。就像盖楼，二楼的砖还没稳就开始盖三楼，整体看起来像是竖着的，但总觉得&gt; 里不对劲。</li>
+</ul>
+<p>根据你今天的表现来判断：你其实已经到了层3-4之间。你能理解 AABB、BFS、递归生成这些概念，说明基础并不差。真正缺的是遇到一个新问题时，独立把它拆解成&gt; 法步骤的能力。这个能力不是靠”多看”培养的，而是靠动手拆培养的。</p>
+<p>针对你的具体学习路径<br>我给你的建议和网上”刷 LeetCode”的路子完全不同，因为你是游戏开发者，用项目驱动学习比刷题有效得多。<br>第一阶段：建立”翻译”习惯（1-2周）<br>每次遇到任何一个游戏功能需求，先不要想代码，先在纸上（或者脑子里）做三件事：</p>
+<ol>
+<li>输入是什么？（我有哪些已知信息）</li>
+<li>输出是什么？（我要得到什么）</li>
+<li>中间要做哪些判断？（什么情况走哪条路）<br>比如今天讲的”门开在哪里”这个问题，翻译出来就是：</li>
+</ol>
+<p>输入：两个矩形的坐标<br>输出：一段共享线段（如果存在）<br>判断：A的右边 &#x3D;&#x3D; B的左边？且两个矩形在Y轴上有重叠？</p>
+<p>这个翻译动作练熟之后，写代码只是把中文换成代码语法，反而是最简单的部分。</p>
+<p>第二阶段：把今天的代码手拆一遍（2-4周）<br>不要背代码，而是把今天我们做的地图生成系统，从零自己重新写一遍。不看原代码，只看我们讨论的思路图。<br>推荐顺序，从最简单的模块开始：</p>
+<p>每个任务的标准是：不看任何参考，自己能写出来，并且能解释每一行为什么这么写。写不出来不是失败，是发现了真正的卡点。</p>
+<p>第三阶段：遇到新问题时的思考框架<br>以后遇到任何算法问题，用这个固定流程走一遍：<br>第一步：用中文把问题说清楚<br>   “我需要在一个矩形里找到一个位置，放下另一个矩形，<br>    且不能和已有的矩形重叠”  </p>
+<p>第二步：确定输入和输出<br>   输入：大矩形坐标、小矩形尺寸、已占用列表<br>   输出：一个合法坐标，或者”找不到”</p>
+<p>第三步：想最笨的解法<br>   最笨的做法是什么？随机撒点、挨个检测、失败重试——<br>   能跑通就先写笨的，跑通之后再想怎么优化</p>
+<p>第四步：找”子问题”<br>   这个问题能不能拆成几个更小的问题？<br>   “随机取点”是一个子问题，”判断是否重叠”是另一个，<br>   分开实现，分开测试<br>最笨的解法能跑通，比聪明的解法想不清楚要好得多。 今天的地图生成，核心其实就是”随机撒点 + 重试”这个最笨的方法，但它完全够用。</p>
+<p>关于”逻辑跟不上”的根本建议<br>不要只是读代码或看解释。每次看到一段逻辑，立刻在纸上或脑子里跑一个最小的具体例子。 比如 AABB 重叠检测，不要只看代码，而是拿两个具体坐标的矩形，把每个条件判断的结果手动算一遍。这一步很多人跳过了，但它是让”半懂”变成”真懂”的关键动作。</p>
+<hr>
+<p>我：可以从最基础的开始练习吗，我实际上基础并不牢，可能数据结构和算法都还理解不到位，属于知道但是不知道怎么写的水平</p>
+<hr>
+<p>AI：</p>
+<p>先做一个诊断题<br>不要查任何资料，凭现在的直觉，用 C# 写出下面这个功能：<br>给你一个整数列表：<br>List<int> numbers &#x3D; new List<int> { 3, 7, 1, 9, 4 };</p>
+<p>请你写一段代码，找出里面最小的数字，然后用 Debug.Log 输出它。<br>要求只有一个：写你能写出来的。哪怕只写出一半、哪怕语法不对、哪怕思路有点乱都没关系，直接把你的想法打出来给我。</p>
+<p>我需要看到你现在真实的水平，才能知道我们从哪里开始补。不用担心写错，写错才有得聊。</p>
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> minNum = numbers[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">foreach</span>(<span class="built_in">int</span> nowNum <span class="keyword">in</span> numbers)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(nowNum &lt; minNum)</span><br><span class="line">        minNum = nowNum;</span><br><span class="line">&#125;</span><br><span class="line">Debug.Log(minNum);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>你真正缺的不是基础语法，而是”面对一个新问题时，不知道从哪里下手”的那种自信和方法。<br>我们来专门训练这个。我会给你一系列题，难度一点点往上加，每道题我都会教你一个拆题的思路模式，而不只是给你看答案。</p>
+<p>第一关：列表操作<br>刚才你写的是”找最小值”，现在加一点变化：<br>题目：<br>给你一个列表：<br>List<int> numbers &#x3D; new List<int> { 3, 7, 1, 9, 4, 7, 3 };</p>
+<p>要求：</p>
+<ol>
+<li>找出最大值和最小值</li>
+<li>计算所有数字的总和</li>
+<li>用 Debug.Log 分别输出这三个结果<br>在动手写之前，先用中文回答我三个问题：</li>
+</ol>
+<p>你打算用几个变量？分别存什么？<br>循环里每次要做哪些判断？<br>总和怎么算？</p>
+<p>把思路说出来，然后再写代码。这个”先说思路再写代码”的习惯，是我们整个练习过程里最重要的一件事。</p>
+<hr>
+<p>我：1.我打算用三个变量，分别存储min,max,sum；2，3.循环中判断当前数字是否大于最大值或者小于最小值，再加上sum。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">int</span> max = numbers[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">int</span> min = numbers[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="built_in">int</span> number <span class="keyword">in</span> numbers)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(number &gt; max)</span><br><span class="line">        &#123;</span><br><span class="line">            max = number;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(number &lt; min)</span><br><span class="line">        &#123;</span><br><span class="line">            min = number;</span><br><span class="line">        &#125;</span><br><span class="line">        sum += number;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine(<span class="string">$&quot;最大值: <span class="subst">&#123;max&#125;</span>,最小值：<span class="subst">&#123;min&#125;</span>，总和：<span class="subst">&#123;sum&#125;</span>&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>满分。逻辑正确，代码整洁，<code>sum += number</code>这个写法也很自然。<br>唯一一个小细节：sum 初始化成 0 是对的，但<code>max</code>和<code>min </code>都初始化成 <code>numbers[0]</code>——你知道为什么不能初始化成 0 吗？<br>用一句话告诉我原因，然后我们进下一关。</p>
+<hr>
+<p>我：如果min初始化为0的话，那么如果列表内没有小于0的值，输出的就会是0了，不是列表中的任意一个数，max同理</p>
+<hr>
+<p>AI：</p>
+<p>完全正确，而且你说清楚了”为什么”，不只是知道结论。</p>
+<p>第二关：列表操作进阶——筛选和新列表<br>现在加一个新概念：把符合条件的元素存到一个新列表里。<br>题目：<br>给你一个列表：<br>List<int> numbers &#x3D; new List<int> { 3, 7, 1, 9, 4, 7, 3, 8, 2, 6 };</p>
+<p>要求：</p>
+<ol>
+<li>把所有大于 5 的数字，存进一个新列表 bigNumbers</li>
+<li>计算 bigNumbers 的平均值</li>
+<li>输出 bigNumbers 里有几个数字，以及它们的平均值<br>老规矩，先用中文说思路：</li>
+</ol>
+<ul>
+<li>bigNumbers 怎么声明？初始是什么状态？</li>
+<li>循环里什么时候往 bigNumbers 加东西？</li>
+<li>平均值怎么算？（提示：你已经知道怎么求总和和个数了）</li>
+</ul>
+<hr>
+<p>我：</p>
+<p>bigNumbers初始是一个空列表，直接用new List就行，然后对循环中每个数进行判断，直接Add就行<br>平均值只需要总和除以数量就行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;<span class="built_in">int</span>&gt; bigNumbers = numbers.Where(n =&gt; n &gt; <span class="number">5</span>).ToList();</span><br><span class="line">Console.WriteLine(<span class="string">&quot;大于5的数字有：&quot;</span>);</span><br><span class="line"><span class="keyword">foreach</span> (<span class="built_in">int</span> num <span class="keyword">in</span> bigNumbers)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(num);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">double</span> avg = bigNumbers.Average();</span><br><span class="line">Console.WriteLine(<span class="string">$&quot;大于5的数字的平均值是：<span class="subst">&#123;avg&#125;</span>&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（用了LINQ被AI骂了TvT）下面是另一个代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    List&lt;<span class="built_in">int</span>&gt; bigNumbers = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    <span class="built_in">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;大于5的数字有：&quot;</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="built_in">int</span> num <span class="keyword">in</span> numbers)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(num &gt; <span class="number">5</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            bigNumbers.Add(num);</span><br><span class="line">            sum += num;</span><br><span class="line">            Console.WriteLine(num);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">float</span> avg = (<span class="built_in">float</span>)sum / bigNumbers.Count;</span><br><span class="line">    Console.WriteLine(<span class="string">$&quot;大于5的数字的平均值是：<span class="subst">&#123;avg&#125;</span>&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>第三关：字典——用名字找东西<br>列表是用编号找东西（numbers[0]），字典是用名字找东西。  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Dictionary&lt;<span class="built_in">string</span>, <span class="built_in">int</span>&gt; age = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, <span class="built_in">int</span>&gt;();  </span><br><span class="line">age[<span class="string">&quot;小明&quot;</span>] = <span class="number">18</span>;  </span><br><span class="line">age[<span class="string">&quot;小红&quot;</span>] = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">Debug.Log(age[<span class="string">&quot;小明&quot;</span>]);  <span class="comment">// 输出 18</span></span><br></pre></td></tr></table></figure>
+
+<p>可以把字典想成一张<strong>对照表</strong>：左边是key（钥匙），右边是value（对应的值），用key去找value。</p>
+<p>在地图生成里我们就用过字典——家具名字对应家具的定义数据，房间类型对应允许放什么家具，都是这种”名字→数据”的结构。</p>
+<hr>
+<p><strong>题目：</strong></p>
+<p>你要统计一段文字里每个字母出现了几次。</p>
+<p>string text &#x3D; “hello world”;</p>
+<p>要求：</p>
+<ol>
+<li>遍历 text 里每个字符</li>
+<li>跳过空格</li>
+<li>用一个字典记录每个字母出现的次数</li>
+<li>最后输出每个字母和它的次数<br>老规矩，先说思路：</li>
+</ol>
+<ul>
+<li>字典的 key 和 value 分别是什么类型？</li>
+<li>遇到一个新字母（字典里还没有）和遇到一个已有字母，处理方式有什么不同？</li>
+<li>怎么遍历一个字符串的每个字符？</li>
+</ul>
+<hr>
+<p>我：</p>
+<p>字典的key是string或者char类型，value是int类型<br>如果遇到一个新字母应该加入字典，如果遇到一个已有字母应该查找到那个子集然后加一<br>直接用foreach遍历就行，因为string是一个字符串，本质上是一个char的数组，如果碰到空格就continue就可以了</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> text = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">Dictionary&lt;<span class="built_in">char</span>,<span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">char</span>,<span class="built_in">int</span>&gt;();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="built_in">char</span> c <span class="keyword">in</span> text)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (dic.ContainsKey(c))</span><br><span class="line">        &#123;</span><br><span class="line">            dic[c]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            dic[c] = <span class="number">1</span>;</span><br><span class="line">            containKey += c;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> (KeyValuePair&lt;<span class="built_in">char</span>, <span class="built_in">int</span>&gt; pair <span class="keyword">in</span> dic)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(pair.Key + <span class="string">&quot;:&quot;</span> + pair.Value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>第四关：队列——先进先出</p>
+<p>队列就是排队。第一个进去的，第一个出来。<br>csharpQueue<int> q &#x3D; new Queue<int>();<br>q.Enqueue(1);   &#x2F;&#x2F; 入队：排到队尾<br>q.Enqueue(2);<br>q.Enqueue(3);</p>
+<p>int first &#x3D; q.Dequeue();  &#x2F;&#x2F; 出队：从队头取出<br>Debug.Log(first);  &#x2F;&#x2F; 输出 1<br>Debug.Log(q.Count); &#x2F;&#x2F; 输出 2，队列里还剩 2 和 3  </p>
+<p>这个结构为什么重要？因为 <strong>BFS 就是用队列实现的</strong>。</p>
+<p>我们之前说 BFS 像”水波扩散”——从一个点出发，先找所有相邻的点，再找那些点的相邻点……队列天然符合这个顺序：先进去的先处理，保证你总是把”当前这层”处理完，才去处理”下一层”。</p>
+<hr>
+<p>先做一个热身，感受队列的行为：</p>
+<p><strong>题目：</strong><br>给你一个列表：<br>List<int> numbers &#x3D; new List<int> { 1, 2, 3, 4, 5 };</p>
+<p>要求：</p>
+<ol>
+<li>把 numbers 里所有的数依次放进一个队列</li>
+<li>每次从队列取出一个数，乘以 2，然后输出</li>
+<li>直到队列空了为止<br>这题不需要说思路了，直接写。重点是感受 <code>Enqueue</code>、<code>Dequeue</code>、<code>q.Count</code> 这三个操作。</li>
+</ol>
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">List&lt;<span class="built_in">int</span>&gt; numbers = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">Queue&lt;<span class="built_in">int</span>&gt; queue = <span class="keyword">new</span> Queue&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> numbers)</span><br><span class="line">    &#123;</span><br><span class="line">        queue.Enqueue(item);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (queue.Count &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">int</span> num = queue.Dequeue() * <span class="number">2</span>;</span><br><span class="line">        Console.WriteLine(num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI:</p>
+<p>完美，而且 while (queue.Count &gt; 0) 这个写法很标准，BFS 里用的就是这个模式。</p>
+<p>现在用队列实现真正的 BFS。这是你之前在地图生成里见过的连通性验证，现在自己把它写出来。<br>题目：<br>有5个房间，编号 0 到 4，连接关系如下：<br>0 连接 1<br>0 连接 2<br>1 连接 3<br>3 连接 4  </p>
+<p>用 BFS 从房间0出发，输出你能到达的所有房间编号。<br>连接关系用这个结构表示，每个房间存一个列表，记录它连着哪些房间：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">csharpDictionary&lt;<span class="built_in">int</span>, List&lt;<span class="built_in">int</span>&gt;&gt; graph = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, List&lt;<span class="built_in">int</span>&gt;&gt;()</span><br><span class="line">&#123;</span><br><span class="line">    &#123; <span class="number">0</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">1</span>, <span class="number">2</span> &#125; &#125;,</span><br><span class="line">    &#123; <span class="number">1</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">0</span>, <span class="number">3</span> &#125; &#125;,</span><br><span class="line">    &#123; <span class="number">2</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">0</span> &#125; &#125;,</span><br><span class="line">    &#123; <span class="number">3</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">1</span>, <span class="number">4</span> &#125; &#125;,</span><br><span class="line">    &#123; <span class="number">4</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">3</span> &#125; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>先说思路，重点回答这两个问题：</p>
+<ul>
+<li>为什么需要一个 visited（已访问）集合？不用的话会发生什么？  </li>
+<li>每次从队列取出一个房间后，下一步做什么？</li>
+</ul>
+<hr>
+<p>它好像坚定的认为我在问的只有随机绘制地图的问题（）</p>
+<p>我：</p>
+<p>可以用visited来判断这些节点有没有被访问过，如果存在有没被访问过的，那么就说明没有跑通，每次从队列取出一个房间后，先查阅这个房间连通哪个房间，然后再查阅那个房间连通哪个房间，一路遍历下去（？，我有点转不过来了</p>
+<hr>
+<p>AI：用纸上模拟来建立直觉<br>忘掉代码，想象你站在房间0，手里拿着：  </p>
+<blockquote>
+<p>一张待去列表（队列）：记录”接下来要去哪些房间”<br>一张已去清单（visited）：记录”哪些房间已经去过了”</p>
+</blockquote>
+<p>第0步：出发  </p>
+<blockquote>
+<p>待去列表：[0]<br>已去清单：{}  </p>
+</blockquote>
+<p>第1步：从待去列表取出 0，去房间0  </p>
+<blockquote>
+<p>到了房间0，看看它连着哪些房间：1 和 2<br>把 1 和 2 加进待去列表<br>把 0 加进已去清单<br>待去列表：[1, 2]<br>已去清单：{0}  </p>
+</blockquote>
+<p>第2步：从待去列表取出 1，去房间1  </p>
+<blockquote>
+<p>到了房间1，看看它连着哪些房间：0 和 3<br>0 已经在已去清单里了，跳过  ← 这就是为什么需要 visited<br>把 3 加进待去列表<br>把 1 加进已去清单<br>待去列表：[2, 3]<br>已去清单：{0, 1}  </p>
+</blockquote>
+<p>第3步：取出 2  </p>
+<blockquote>
+<p>房间2连着：0<br>0 已访问，跳过<br>把 2 加进已去清单<br>待去列表：[3]<br>已去清单：{0, 1, 2}  </p>
+</blockquote>
+<p>第4步：取出 3</p>
+<blockquote>
+<p>房间3连着：1 和 4<br>1 已访问，跳过<br>把 4 加进待去列表<br>待去列表：[4]<br>已去清单：{0, 1, 2, 3}  </p>
+</blockquote>
+<p>第5步：取出 4</p>
+<blockquote>
+<p>房间4连着：3<br>3 已访问，跳过<br>待去列表：[]<br>已去清单：{0, 1, 2, 3, 4}  </p>
+</blockquote>
+<p>待去列表空了，结束。已去清单就是所有能到达的房间。</p>
+<p>现在回答你之前的问题：不用 visited 会发生什么？<br>第2步到了房间1，发现它连着房间0，就把0又加进待去列表。之后又去房间0，又把1和2加进去……0→1→0→1→0，永远转圈，程序死循环。<br>visited 的唯一作用就是防止回头。  </p>
+<p>现在规律很清楚了，每一步就三件事：</p>
+<ol>
+<li>从队列取出一个房间</li>
+<li>遍历它的邻居，把没访问过的加进队列，并标记为已访问</li>
+<li>重复，直到队列空</li>
+</ol>
+<p>按这个思路写代码吧。visited 用 HashSet<int> 来存，它专门用来快速判断”某个值在不在里面”：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">csharpHashSet&lt;<span class="built_in">int</span>&gt; visited = <span class="keyword">new</span> HashSet&lt;<span class="built_in">int</span>&gt;();  </span><br><span class="line">visited.Add(<span class="number">0</span>);  </span><br><span class="line">Debug.Log(visited.Contains(<span class="number">0</span>));  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    Dictionary&lt;<span class="built_in">int</span>, List&lt;<span class="built_in">int</span>&gt;&gt; graph = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, List&lt;<span class="built_in">int</span>&gt;&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        &#123; <span class="number">0</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">1</span>, <span class="number">2</span> &#125; &#125;,</span><br><span class="line">        &#123; <span class="number">1</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">0</span>, <span class="number">3</span> &#125; &#125;,</span><br><span class="line">        &#123; <span class="number">2</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">0</span> &#125; &#125;,</span><br><span class="line">        &#123; <span class="number">3</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">1</span>, <span class="number">4</span> &#125; &#125;,</span><br><span class="line">        &#123; <span class="number">4</span>, <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt; &#123; <span class="number">3</span> &#125; &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    Queue&lt;<span class="built_in">int</span>&gt; visiting = <span class="keyword">new</span> Queue&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    HashSet&lt;<span class="built_in">int</span>&gt; visited = <span class="keyword">new</span> HashSet&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        visiting.Enqueue(<span class="number">0</span>);</span><br><span class="line">        visited.Add(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">while</span> (visiting.Count &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">int</span> current = visiting.Dequeue();</span><br><span class="line">            <span class="keyword">if</span> (graph.ContainsKey(current))</span><br><span class="line">            &#123;</span><br><span class="line">                List&lt;<span class="built_in">int</span>&gt; neighbors = graph[current];</span><br><span class="line">                <span class="keyword">foreach</span> (<span class="built_in">int</span> neighbor <span class="keyword">in</span> neighbors)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!visited.Contains(neighbor))</span><br><span class="line">                    &#123;</span><br><span class="line">                        visiting.Enqueue(neighbor);</span><br><span class="line">                        visited.Add(neighbor);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="built_in">int</span> node <span class="keyword">in</span> visited)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>完全正确。<br>ContainsKey 留着也没问题，算是一个防御性检查，实际项目里这样写反而更安全。</p>
+<p>第五关：用 BFS 验证地图连通性<br>现在把 BFS 用在真实场景里。这就是地图生成系统里的那段验证逻辑。<br>题目：<br>有一个地图，包含6个房间（编号0到5）和它们的连接关系。<br>写一个函数：</p>
+<p>bool IsAllConnected(Dictionary&lt;int, List<int>&gt; graph, int roomCount)</p>
+<p>从房间0出发跑BFS，如果能到达所有房间，返回 true，否则返回 false。</p>
+<p>用下面两个图测试，分别输出结果：</p>
+<p>&#x2F;&#x2F; 图A：全部连通<br>{ 0: [1,2], 1: [0,3], 2: [0,4], 3: [1,5], 4: [2], 5: [3] }</p>
+<p>&#x2F;&#x2F; 图B：房间4和5是孤岛，不连通<br>{ 0: [1,2], 1: [0,3], 2: [0], 3: [1], 4: [5], 5: [4] }</p>
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">bool</span> <span class="title">IsAllConnected</span>(<span class="params">Dictionary&lt;<span class="built_in">int</span>, List&lt;<span class="built_in">int</span>&gt;&gt; graph, <span class="built_in">int</span> roomCount</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Queue&lt;<span class="built_in">int</span>&gt; visiting = <span class="keyword">new</span> Queue&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    HashSet&lt;<span class="built_in">int</span>&gt; visited = <span class="keyword">new</span> HashSet&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    visiting.Enqueue(<span class="number">0</span>);</span><br><span class="line">    visited.Add(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (visiting.Count &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">int</span> node = visiting.Dequeue();</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="built_in">int</span> neighbor <span class="keyword">in</span> graph[node])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (!visited.Contains(neighbor))</span><br><span class="line">            &#123;</span><br><span class="line">                visited.Add(neighbor);</span><br><span class="line">                visiting.Enqueue(neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> visited.Count == roomCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<img src="/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/1.png" class="">
+
+<p>顺序是有原因的，不是随机排的：<br>递归是地基，后面的归并排序、BSP、DFS、回溯、DP，全部都建在递归上面。递归没搞清楚，后面每一个都会卡。<br>贪心和DP放在中间，因为它们不是”数据结构”，而是”解题思路”，需要先有足够的代码感觉才能理解为什么这样想。<br>A* 放最后，因为它是 BFS + 贪心的结合，等前面都清楚了，A* 就是水到渠成的事。</p>
+<h3 id="现在开始：递归"><a href="#现在开始：递归" class="headerlink" title="现在开始：递归"></a>现在开始：递归</h3><p>递归只有一个核心思想：一个函数在自己的函数体里调用自己。<br>听起来很绕，但其实你每天都在用这个思维，只是没意识到。<br>比如”计算 1+2+3+…+n 的总和”，你可以这样想：<br>sum(n) &#x3D; n + sum(n-1)<br>sum(n-1) &#x3D; (n-1) + sum(n-2)<br>sum(n-2) &#x3D; (n-2) + sum(n-3)<br>…<br>sum(1) &#x3D; 1   ← 到这里不再往下，这叫”终止条件”<br>每一层都把问题缩小一点，直到小到能直接回答为止。<br>用代码写出来就是：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">Sum</span>(<span class="params"><span class="built_in">int</span> n</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;        <span class="comment">// 终止条件：最小的情况直接给答案</span></span><br><span class="line">    <span class="keyword">return</span> n + Sum(n - <span class="number">1</span>);       <span class="comment">// 否则：当前值 + 更小问题的答案</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归函数永远只有这两部分：<strong>终止条件</strong> 和 <strong>缩小问题</strong>。</p>
+<hr>
+<p><strong>第一题：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">用递归计算 n 的阶乘。</span><br><span class="line">阶乘定义：n! = n × (n-1) × (n-2) × ... × 1</span><br><span class="line">比如 5! = 5 × 4 × 3 × 2 × 1 = 120</span><br><span class="line"></span><br><span class="line">写一个函数 int Factorial(int n)</span><br><span class="line">写之前先用中文回答：</span><br><span class="line"></span><br><span class="line">终止条件是什么？（最小的情况是哪种，直接能给出答案？）</span><br><span class="line">缩小问题怎么写？（n 的阶乘，能不能用 n-1 的阶乘来表示？）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">Factorial</span>(<span class="params"><span class="built_in">int</span> n</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n * Factorial(n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>完美，一次就对了。<br>现在做一件很重要的事：在脑子里手动跑一遍 Factorial(4)，把每一层的调用写出来，像这样：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Factorial(4)</span><br><span class="line">= 4 * Factorial(3)</span><br><span class="line">= 4 * 3 * Factorial(2)</span><br><span class="line">= 4 * 3 * 2 * Factorial(1)</span><br><span class="line">= 4 * 3 * 2 * 1</span><br><span class="line">= 24</span><br></pre></td></tr></table></figure>
+<p>这个”展开”的动作非常重要。递归之所以让人觉得绕，是因为脑子里没有这张展开图。每次遇到新的递归函数，都这样手动展开一遍，很快就会建立直觉。</p>
+<p><strong>第二题</strong>，加一点难度：<br>斐波那契数列：1, 1, 2, 3, 5, 8, 13, 21…<br>规律：第n个数 &#x3D; 第n-1个数 + 第n-2个数<br>前两个数都是1。</p>
+<p>写一个函数 int Fib(int n) 返回第n个斐波那契数。</p>
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">Fib</span>(<span class="params"><span class="built_in">int</span> n</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> Fib(n - <span class="number">1</span>) + Fib(n - <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>现在手动展开一下 Fib(5)，但这次展开会长得和上一题不一样，你会发现一个有趣的问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Fib(5)</span><br><span class="line">= Fib(4) + Fib(3)</span><br><span class="line">= (Fib(3) + Fib(2)) + (Fib(2) + Fib(1))</span><br><span class="line">= ((Fib(2) + Fib(1)) + 1) + (1 + 1)</span><br><span class="line">= ((1 + 1) + 1) + 2</span><br><span class="line">= 5</span><br></pre></td></tr></table></figure>
+<p>注意看：Fib(3) 被计算了两次，Fib(2) 被计算了三次。<br>n 越大，重复计算的次数会指数级增长。算 Fib(50) 的话，这个函数会慢到你以为程序卡死了。<br>这个问题就是动态规划要解决的核心问题——把算过的结果存起来，下次直接取，不重复算。这就是为什么我们把 DP 放在递归后面学，因为 DP 本质上就是”加了记忆的递归”。<br>现在先不写 DP 版本，但你已经亲手碰到了它要解决的问题，等我们学到那一关的时候你会想起这个时刻。  </p>
+<h3 id="第三题：递归用在实际结构上"><a href="#第三题：递归用在实际结构上" class="headerlink" title="第三题：递归用在实际结构上"></a>第三题：递归用在实际结构上</h3><p>给你一个嵌套列表，求所有数字的总和。<br>嵌套的意思是列表里面还可以有列表，层数不固定。  </p>
+<p>比如：[1, [2, 3], [4, [5, 6]], 7]<br>总和 &#x3D; 1+2+3+4+5+6+7 &#x3D; 28<br>在 C# 里用 object 类型来表示”可能是数字，也可能是列表”：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="number">1</span>,</span><br><span class="line">    <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">2</span>, <span class="number">3</span> &#125;,</span><br><span class="line">    <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">4</span>, <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">5</span>, <span class="number">6</span> &#125; &#125;,</span><br><span class="line">    <span class="number">7</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//判断一个 object 是不是列表用 is：</span></span><br><span class="line"><span class="keyword">if</span> (item <span class="keyword">is</span> List&lt;<span class="built_in">object</span>&gt; subList)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// item 是列表，可以用 subList 来操作它</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (item <span class="keyword">is</span> <span class="built_in">int</span> num)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// item 是数字，可以用 num 来操作它</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> data = <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt;</span><br><span class="line">    &#123;   </span><br><span class="line">        <span class="number">1</span>,</span><br><span class="line">        <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">2</span>, <span class="number">3</span> &#125;,</span><br><span class="line">        <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">4</span>, <span class="keyword">new</span> List&lt;<span class="built_in">object</span>&gt; &#123; <span class="number">5</span>, <span class="number">6</span> &#125; &#125;,</span><br><span class="line">        <span class="number">7</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">int</span> sum = Process(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">Process</span>(<span class="params"><span class="built_in">object</span> obj</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (obj <span class="keyword">is</span> <span class="built_in">int</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += (<span class="built_in">int</span>)obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">is</span> List&lt;<span class="built_in">object</span>&gt; list)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> list)</span><br><span class="line">        &#123;</span><br><span class="line">            sum += Process(item);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>停下来看看你刚写的这道题。</p>
+<p>这道题的结构和地图生成里的<strong>三层嵌套生成</strong>完全一样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">房间 → 遍历家具列表 → 每件家具遍历表面物件 → 表面物件可能还有表面</span><br></pre></td></tr></table></figure>
+
+<p>用的就是同一个模式：<strong>碰到普通元素直接处理，碰到容器就递归进去</strong>。你当时看那段代码觉得复杂，现在应该感觉亲切一些了。</p>
+<hr>
+<p>递归三道题全部一次性写对，可以进下一阶段了。</p>
+<p><strong>第二阶段：排序算法</strong>，我们从冒泡排序开始。</p>
+<p>冒泡排序不是因为它快（它其实很慢），而是因为它的思路最直觉，能帮你建立”通过比较和交换来排序”的基本感觉，后面的快速排序和归并排序都建在这个感觉上。</p>
+<p><strong>题目：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用冒泡排序把这个列表从小到大排好：</span><br><span class="line">List&lt;int&gt; numbers = new List&lt;int&gt; &#123; 5, 3, 8, 1, 9, 2 &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>冒泡排序的思路是：每一轮从头开始，比较相邻两个数，如果左边比右边大就交换，一轮结束后最大的数就”浮”到了最右边。重复这个过程直到排好。</p>
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; n; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &gt; arr[j+<span class="number">1</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">int</span> temp = arr[j+<span class="number">1</span>];</span><br><span class="line">            arr[j + <span class="number">1</span>] = arr[j];</span><br><span class="line">            arr[j] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>归并排序是冒泡排序完全不同的思路，它用的是分治——把大问题切成两半，分别解决，再把结果合并。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[5, 3, 8, 1, 9, 2]</span><br><span class="line">        ↓ 切成两半</span><br><span class="line">[5, 3, 8]    [1, 9, 2]</span><br><span class="line">    ↓              ↓</span><br><span class="line">[5,3] [8]    [1,9] [2]</span><br><span class="line">  ↓    ↓       ↓    ↓</span><br><span class="line">[5][3] [8]   [1][9] [2]</span><br><span class="line">  ↓              ↓</span><br><span class="line">合并[3,5]      合并[1,9]</span><br><span class="line">    ↓              ↓</span><br><span class="line">合并[3,5,8]    合并[1,2,9]</span><br><span class="line">        ↓ 最后合并</span><br><span class="line">   [1,2,3,5,8,9]</span><br></pre></td></tr></table></figure>
+<p>难点不在”切”，切很简单，每次从中间切开就行。<br>难点在合并：两个已经排好序的数组，怎么合并成一个排好序的数组？<br>比如把 [3, 5, 8] 和 [1, 2, 9] 合并成 [1, 2, 3, 5, 8, 9]。<br>思路是：两个数组各放一个指针，每次比较两个指针指向的数，把小的那个取出来放进结果，然后那边的指针往右移一步，直到某一边取完为止，把另一边剩下的全部接到结果后面。<br>先只做合并这一步——  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">题目：</span><br><span class="line">写一个函数：</span><br><span class="line">int[] Merge(int[] left, int[] right)</span><br><span class="line"></span><br><span class="line">输入两个已经排好序的数组，返回合并后的排好序的数组。</span><br><span class="line"></span><br><span class="line">测试：</span><br><span class="line">left  = [3, 5, 8]</span><br><span class="line">right = [1, 2, 9]</span><br><span class="line">结果应该是 [1, 2, 3, 5, 8, 9]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span>[] <span class="title">Merge</span>(<span class="params"><span class="built_in">int</span>[] left, <span class="built_in">int</span>[] right</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">int</span>[] result = <span class="keyword">new</span> <span class="built_in">int</span>[left.Length + right.Length];</span><br><span class="line">    <span class="built_in">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 两边都还有元素时，比较取小的</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; left.Length &amp;&amp; j &lt; right.Length)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (left[i] &lt;= right[j])</span><br><span class="line">            result[index++] = left[i++];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            result[index++] = right[j++];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 左边还有剩</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; left.Length)</span><br><span class="line">        result[index++] = left[i++];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 右边还有剩</span></span><br><span class="line">    <span class="keyword">while</span> (j &lt; right.Length)</span><br><span class="line">        result[index++] = right[j++];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Ai：</p>
+<p>Merge 已经有了，剩下的就是把数组切开，递归排序两半，再合并。  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span>[] <span class="title">MergeSort</span>(<span class="params"><span class="built_in">int</span>[] arr</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 终止条件是什么？</span></span><br><span class="line">    <span class="comment">// 切成两半：mid = arr.Length / 2</span></span><br><span class="line">    <span class="comment">// 左半边：arr[0] 到 arr[mid-1]</span></span><br><span class="line">    <span class="comment">// 右半边：arr[mid] 到 arr[arr.Length-1]</span></span><br><span class="line">    <span class="comment">// 递归排序两半，再 Merge</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C# 里截取数组一段用 arr[0..mid] 这个语法：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">csharpint[] left = arr[<span class="number">0.</span>.mid];</span><br><span class="line"><span class="built_in">int</span>[] right = arr[mid..arr.Length];</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span>[] <span class="title">MergeSort</span>(<span class="params"><span class="built_in">int</span>[] arr</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (arr.Length &lt;= <span class="number">1</span>) <span class="keyword">return</span> arr;  <span class="comment">// 终止条件放最前面</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">int</span> mid = arr.Length / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">int</span>[] left = MergeSort(arr[<span class="number">0.</span>.mid]);</span><br><span class="line">    <span class="built_in">int</span>[] right = MergeSort(arr[mid..]);</span><br><span class="line">    <span class="keyword">return</span> Merge(left, right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI：</p>
+<p>归并排序掌握了，进第三阶段：树和栈。<br>树其实你已经接触过了——BSP地牢生成就是一棵二叉树，每次切割产生左右两个子节点。我们现在把这个结构正式化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">树的基本概念只有三个：</span><br><span class="line">        1          ← 根节点（Root）：树的起点，只有一个</span><br><span class="line">       / \</span><br><span class="line">      2   3        ← 子节点（Children）</span><br><span class="line">     / \</span><br><span class="line">    4   5          ← 叶节点（Leaf）：没有子节点的节点</span><br></pre></td></tr></table></figure>
+
+<p>每个节点最多有两个子节点的树叫二叉树<br>从根节点到任意节点的路径叫深度</p>
+<p>在 C# 里，树的节点用一个类来表示：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">TreeNode</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Value;</span><br><span class="line">    <span class="keyword">public</span> TreeNode Left;</span><br><span class="line">    <span class="keyword">public</span> TreeNode Right;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TreeNode</span>(<span class="params"><span class="built_in">int</span> <span class="keyword">value</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Value = <span class="keyword">value</span>;</span><br><span class="line">        Left = <span class="literal">null</span>;</span><br><span class="line">        Right = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>手动建一棵上面图里的树：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TreeNode root = <span class="keyword">new</span> TreeNode(<span class="number">1</span>);</span><br><span class="line">root.Left = <span class="keyword">new</span> TreeNode(<span class="number">2</span>);</span><br><span class="line">root.Right = <span class="keyword">new</span> TreeNode(<span class="number">3</span>);</span><br><span class="line">root.Left.Left = <span class="keyword">new</span> TreeNode(<span class="number">4</span>);</span><br><span class="line">root.Left.Right = <span class="keyword">new</span> TreeNode(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>题目：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">写一个函数 void PrintAll(TreeNode node)</span><br><span class="line">把这棵树里所有节点的值都输出出来。</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintAll</span>(<span class="params">TreeNode node</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    Console.WriteLine(node.Value);</span><br><span class="line">    PrintAll(node.Left);</span><br><span class="line">    PrintAll(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>AI:</p>
+<p>这个模式叫前序遍历（先打印自己，再递归左右）。树的遍历有三种，区别只是打印的时机不同：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前序：根 → 左 → 右</span></span><br><span class="line">Console.WriteLine(node.Value);</span><br><span class="line">PrintAll(node.Left);</span><br><span class="line">PrintAll(node.Right);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 中序：左 → 根 → 右</span></span><br><span class="line">PrintAll(node.Left);</span><br><span class="line">Console.WriteLine(node.Value);</span><br><span class="line">PrintAll(node.Right);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后序：左 → 右 → 根</span></span><br><span class="line">PrintAll(node.Left);</span><br><span class="line">PrintAll(node.Right);</span><br><span class="line">Console.WriteLine(node.Value);</span><br></pre></td></tr></table></figure>
+
+<p>用上面那棵树（1是根，2和3是子节点，4和5是2的子节点）：</p>
+<ul>
+<li>前序输出：1 2 4 5 3</li>
+<li>中序输出：4 2 5 1 3</li>
+<li>后序输出：4 5 2 3 1</li>
+</ul>
+<p>中序遍历有个特别有用的性质：<strong>如果是二叉搜索树，中序遍历的结果是从小到大排好序的</strong>。这个先记住，后面会用到。</p>
+<hr>
+<p>现在来一道真正考验递归直觉的题：</p>
+<p><strong>题目：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">写一个函数 int TreeHeight(TreeNode node)</span><br><span class="line">返回一棵树的高度。</span><br><span class="line"></span><br><span class="line">高度定义：从根节点到最深的叶节点，经过了几层。</span><br><span class="line">上面那棵树的高度是 3（1→2→4 或 1→2→5）。</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">int</span> <span class="title">TreeHeight</span>(<span class="params">TreeNode node</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(node == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">int</span> leftHeight = TreeHeight(node.Left);</span><br><span class="line">    <span class="built_in">int</span> rightHeight = TreeHeight(node.Right);</span><br><span class="line">    <span class="keyword">return</span> Math.Max(leftHeight, rightHeight) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我燃尽了，明天再写吧（）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hatanako.github.io">Hatanako</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hatanako.github.io/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/">https://hatanako.github.io/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hatanako.github.io" target="_blank">垃圾回收厂</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%884%EF%BC%89/" title="从零开始做类银练习：四"><img class="cover" src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">从零开始做类银练习：四</div></div><div class="info-2"><div class="info-item-1">今天接上文，前面的Dash和Slide出了点小bug，所以我们先来改一下： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899//PlayerMover.cspublic void Dash(Transform transform)&#123;    dashTimer = 0f;    GCDTimer = GCD; // 重置全局冷却时间    float dir = transform.localScale.x; // 获取当前角色的朝向    rb.velocity = new Vector2(dir * dashSpeed, 0);&#125;public void KeepDash()&#123;    rb.velocity = new Vec...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hatanako</div><div class="author-info-description">Hatanako/Werllra 的个人小网站</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hatanako"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hatanako" target="_blank" title="GitHub"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到<s>垃圾回收厂</s>，这是我用来记录一些平时的笔记和想法的一个小网站。（其实是我太健忘了）</br> 那些文章全是我从我自己的<a target="_blank" rel="noopener" href="https://blog.csdn.net/2504_92226519">CSDN</a>上搬过来的，但是注释全没有了QAQ，哪天有空了再搞（）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%EF%BC%9A%E9%80%92%E5%BD%92"><span class="toc-number">1.</span> <span class="toc-text">现在开始：递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98%EF%BC%9A%E9%80%92%E5%BD%92%E7%94%A8%E5%9C%A8%E5%AE%9E%E9%99%85%E7%BB%93%E6%9E%84%E4%B8%8A"><span class="toc-number">2.</span> <span class="toc-text">第三题：递归用在实际结构上</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/" title="算法练习：一（会有后续吗）"><img src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="算法练习：一（会有后续吗）"/></a><div class="content"><a class="title" href="/%E7%AE%97%E6%B3%95/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/" title="算法练习：一（会有后续吗）">算法练习：一（会有后续吗）</a><time datetime="2026-03-14T16:00:00.000Z" title="发表于 2026-03-15 00:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%884%EF%BC%89/" title="从零开始做类银练习：四"><img src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从零开始做类银练习：四"/></a><div class="content"><a class="title" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%884%EF%BC%89/" title="从零开始做类银练习：四">从零开始做类银练习：四</a><time datetime="2026-03-11T16:00:00.000Z" title="发表于 2026-03-12 00:00:00">2026-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%883%EF%BC%89/" title="从零开始做类银练习：三"><img src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从零开始做类银练习：三"/></a><div class="content"><a class="title" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%883%EF%BC%89/" title="从零开始做类银练习：三">从零开始做类银练习：三</a><time datetime="2026-03-10T16:00:00.000Z" title="发表于 2026-03-11 00:00:00">2026-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%882%EF%BC%89/" title="从零开始做类银练习：二"><img src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从零开始做类银练习：二"/></a><div class="content"><a class="title" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%882%EF%BC%89/" title="从零开始做类银练习：二">从零开始做类银练习：二</a><time datetime="2026-03-09T16:00:00.000Z" title="发表于 2026-03-10 00:00:00">2026-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%881%EF%BC%89/" title="从零开始做类银练习：一"><img src="https://cdn.phototourl.com/uploads/2026-03-08-50b291b2-12c2-40f4-8818-4371f4d0c302.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从零开始做类银练习：一"/></a><div class="content"><a class="title" href="/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/%E4%B8%AA%E4%BA%BA%E7%BB%83%E4%B9%A0/2D%E2%80%94%E2%80%94%E7%B1%BB%E9%93%B6/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%E7%B1%BB%E9%93%B6%E7%BB%83%E4%B9%A0%EF%BC%881%EF%BC%89/" title="从零开始做类银练习：一">从零开始做类银练习：一</a><time datetime="2026-03-08T16:00:00.000Z" title="发表于 2026-03-09 00:00:00">2026-03-09</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Hatanako</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div><div class="footer_custom_text">Banner: <a href="https://www.pixiv.net/artworks/53031871" target="_blank">oO大黄Oo</a> | 背景图：<a href="https://www.pixiv.net/artworks/81371906" target="_blank">endlesscat</a> | 默认封面：<a href="https://www.pixiv.net/artworks/73048736" target="_blank">シエラ</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'hatanako/hatanako.github.io',
+      'data-repo-id': 'R_kgDORgsVWg',
+      'data-category-id': 'DIC_kwDORgsVWs4C34Xd',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script src="/js/typed.min.js"></script><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script><meting-js server="netease" type="playlist" id="7322499697" fixed="true" mini="true" autoplay="false" loop="all" order="random" volume="0.2" preload="auto" theme="#e85d75"></meting-js><script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script><script src="/js/effects.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
