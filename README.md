@@ -48,6 +48,6 @@ GitHub Actions 自动在 `main` 分支推送时：
 ----------------
 详细写法请看：`source/games/GAME_ADD_GUIDE.txt`
 
-你可以按相同格式继续新增游戏、并通过博客文章引用：
+可以按相同格式继续新增游戏、并通过博客文章引用：
 - 详情页链接：`/games/detail/?id=<游戏id>`
 - 直接入口：`/games/<游戏id>/`
