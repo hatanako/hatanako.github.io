@@ -1,0 +1,24 @@
+[
+  {
+    "id": "snake",
+    "title": "HTML5 贪吃蛇",
+    "shortDesc": "方向键 / WASD 控制的经典贪吃蛇",
+    "description": "基于 Canvas 实现的经典贪吃蛇，使用像素网格、可持续加速，并支持键盘重开。",
+    "path": "/games/snake/",
+    "tags": ["Canvas", "休闲", "JS"],
+    "controls": "方向键或 W/A/S/D",
+    "difficulty": "简单",
+    "updatedAt": "2026-05-12"
+  },
+  {
+    "id": "minesweeper",
+    "title": "HTML5 扫雷",
+    "shortDesc": "左键翻格、右键插旗的经典扫雷",
+    "description": "可交互的扫描逻辑实现，支持级联打开与状态判断，适合验证事件处理与游戏循环。",
+    "path": "/games/minesweeper/",
+    "tags": ["Canvas", "休闲", "JS"],
+    "controls": "左键开格，右键插旗",
+    "difficulty": "中等",
+    "updatedAt": "2026-05-12"
+  }
+]

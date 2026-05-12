@@ -1851,3 +1851,7 @@ Cube:samplerCube
 Unity Shader中的CG语言，提供了各种用于图形编程的函数，这些函数是CG为我们封装好的逻辑
 
 具体查阅[顶点和片元着色器示例 - Unity 手册](https://docs.unity.cn/cn/2019.4/Manual/SL-VertexFragmentShaderExamples.html "顶点和片元着色器示例 - Unity 手册")
+
+##### 学习用的一些网站
+
+[ShaderToy](https://www.shadertoy.com/) 这个网站用于实时测试一些像素着色的内容，个人感觉比较好用，但是需要重新学一下语法。
