@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake - HTML5 Demo</title>
+  <style>
+    :root {
+      --bg: #0f1024;
+      --panel: #1b1f3b;
+      --tile: #2f345d;
+      --snake: #45e0a5;
+      --head: #20c88c;
+      --food: #ff5a7a;
+      --text: #e9ecff;
+      --line: #3a3f6a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #111537, #090b16);
+      color: var(--text);
+      font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .wrap {
+      width: min(92vw, 680px);
+      border: 1px solid #4a4f81;
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(13, 16, 33, 0.82);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+    h1 { margin: 4px 0 12px; font-size: 26px; }
+    p { margin: 0 0 10px; color: #bcc0f0; line-height: 1.5; }
+    .toolbar {
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 14px;
+    }
+    button {
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #2a4cc8;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #3d5fdd; }
+    .stage {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas {
+      border: 1px solid var(--line);
+      background: #10142d;
+      width: min(100%, 620px);
+      aspect-ratio: 1 / 1;
+      image-rendering: pixelated;
+      touch-action: none;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #9aa0de;
+    }
+    .muted { color: #7f86b8; }
+    .links { margin-top: 8px; font-size: 13px; }
+    .links a { color: #7ab4ff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>HTML5 贪吃蛇</h1>
+    <p>这是一个可直接放到你博客的独立小游戏示例，部署后可直接访问。</p>
+    <div class="toolbar">
+      <button id="startBtn">开始 / 重新开始</button>
+      <span>分数：<strong id="score">0</strong></span>
+      <span>速度：<strong id="speedText">6</strong> 格/秒</span>
+      <span>状态：<strong id="stateText">待开始</strong></span>
+    </div>
+    <div class="stage">
+      <canvas id="gameCanvas" width="420" height="420" aria-label="snake game canvas"></canvas>
+    </div>
+    <div class="note">
+      操作：方向键或 <span class="muted">WASD</span> 移动，<span class="muted">R</span> 重置。
+    </div>
+    <div class="links">
+      <a href="/games/">返回游戏空间</a>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('gameCanvas')
+      const ctx = canvas.getContext('2d')
+      const scoreEl = document.getElementById('score')
+      const speedText = document.getElementById('speedText')
+      const stateText = document.getElementById('stateText')
+      const startBtn = document.getElementById('startBtn')
+
+      const grid = 14
+      const size = canvas.width / grid
+      let snake = []
+      let dir = { x: 1, y: 0 }
+      let food = { x: 8, y: 8 }
+      let score = 0
+      let speed = 6
+      let running = false
+      let tick = 0
+      let accumulator = 0
+      let lastTs = 0
+
+      const colors = {
+        bg: '#10142d',
+        panel: '#1d2348',
+        tile: '#2f345d',
+        snake: '#44d8a6',
+        head: '#22c78b',
+        food: '#ff5a7a',
+        grid: '#262c58'
+      }
+
+      function reset() {
+        snake = [
+          { x: 6, y: 6 },
+          { x: 5, y: 6 },
+          { x: 4, y: 6 }
+        ]
+        dir = { x: 1, y: 0 }
+        score = 0
+        speed = 6
+        spawnFood()
+        scoreEl.textContent = String(score)
+        speedText.textContent = String(speed)
+        running = true
+        stateText.textContent = '进行中'
+      }
+
+      function spawnFood() {
+        while (true) {
+          const x = Math.floor(Math.random() * grid)
+          const y = Math.floor(Math.random() * grid)
+          if (!snake.some(s => s.x === x && s.y === y)) {
+            food = { x, y }
+            break
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = colors.bg
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        for (let x = 0; x <= grid; x++) {
+          ctx.strokeStyle = colors.grid
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          ctx.moveTo(x * size, 0)
+          ctx.lineTo(x * size, canvas.height)
+          ctx.stroke()
+          ctx.beginPath()
+          ctx.moveTo(0, x * size)
+          ctx.lineTo(canvas.width, x * size)
+          ctx.stroke()
+        }
+
+        snake.forEach((seg, i) => {
+          ctx.fillStyle = i === 0 ? colors.head : colors.snake
+          ctx.fillRect(seg.x * size + 1, seg.y * size + 1, size - 1, size - 1)
+        })
+
+        ctx.fillStyle = colors.food
+        ctx.fillRect(food.x * size + 1, food.y * size + 1, size - 1, size - 1)
+      }
+
+      function step() {
+        const head = snake[0]
+        const next = { x: (head.x + dir.x + grid) % grid, y: (head.y + dir.y + grid) % grid }
+        const hitSelf = snake.some((seg, idx) => idx > 0 && seg.x === next.x && seg.y === next.y)
+        if (hitSelf) {
+          running = false
+          stateText.textContent = '游戏结束'
+          return
+        }
+        snake.unshift(next)
+        if (next.x === food.x && next.y === food.y) {
+          score += 1
+          scoreEl.textContent = String(score)
+          if (score % 3 === 0 && score > 0) speed = Math.min(speed + 0.8, 12)
+          speedText.textContent = String(speed.toFixed(1))
+          spawnFood()
+        } else {
+          snake.pop()
+        }
+      }
+
+      function loop(timestamp) {
+        if (!lastTs) lastTs = timestamp
+        const delta = timestamp - lastTs
+        lastTs = timestamp
+        if (running) {
+          accumulator += delta
+          const target = 1000 / speed
+          while (accumulator >= target) {
+            accumulator -= target
+            step()
+            if (!running) break
+            tick++
+          }
+        }
+        draw()
+        requestAnimationFrame(loop)
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'r' || e.key === 'R') {
+          reset()
+          return
+        }
+        const map = {
+          ArrowUp: { x: 0, y: -1 },
+          ArrowDown: { x: 0, y: 1 },
+          ArrowLeft: { x: -1, y: 0 },
+          ArrowRight: { x: 1, y: 0 },
+          w: { x: 0, y: -1 },
+          W: { x: 0, y: -1 },
+          s: { x: 0, y: 1 },
+          S: { x: 0, y: 1 },
+          a: { x: -1, y: 0 },
+          A: { x: -1, y: 0 },
+          d: { x: 1, y: 0 },
+          D: { x: 1, y: 0 }
+        }
+        const next = map[e.key]
+        if (!next) return
+        if (snake.length > 1) {
+          const neck = snake[0]
+          const second = snake[1]
+          if (next.x === -(neck.x - second.x) && next.y === -(neck.y - second.y)) return
+        }
+        dir = next
+      })
+
+      startBtn.addEventListener('click', () => {
+        reset()
+      })
+
+      reset()
+      requestAnimationFrame(loop)
+    })()
+  </script>
+</body>
+</html>

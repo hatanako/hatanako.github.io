@@ -28,6 +28,22 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - games/**/*.html
+  - games/**/*.js
+  - games/**/*.css
+  - games/**/*.png
+  - games/**/*.jpg
+  - games/**/*.jpeg
+  - games/**/*.gif
+  - games/**/*.webp
+  - games/**/*.svg
+  - games/**/*.woff
+  - games/**/*.woff2
+  - games/**/*.mp3
+  - games/**/*.ogg
+  - games/**/*.json
+  - games/**/*.wasm
+  - games/**/*.data
 
 # Writing
 new_post_name: :title.md # File name of new posts

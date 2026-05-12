@@ -16,7 +16,8 @@ nav:
   fixed: true  # 导航栏固定在顶部
 
 menu:
-  # Home: / || fas fa-home
+  Home: / || fas fa-home
+  游戏空间: /games/ || fas fa-gamepad
   # List||fas fa-list:
   #   Music: /music/ || fas fa-music
   #   Movie: /movies/ || fas fa-video
