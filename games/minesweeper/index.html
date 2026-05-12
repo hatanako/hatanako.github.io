@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minesweeper - HTML5 Demo</title>
+  <style>
+    :root {
+      --bg: #0e1324;
+      --panel: #1f2b4a;
+      --text: #eff2ff;
+      --tile: #34426b;
+      --tile-closed: #2a3760;
+      --tile-open: #d6ddff;
+      --mine: #f35f5f;
+      --accent: #59c7ff;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #172347, #070a14);
+      color: var(--text);
+      font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .panel {
+      width: min(94vw, 560px);
+      background: rgba(13, 17, 34, 0.85);
+      border: 1px solid #3a4770;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.38);
+    }
+    h1 { margin: 4px 0 12px; font-size: 26px; }
+    p { margin: 0 0 12px; color: #c1caec; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: white;
+      background: #2a4cc8;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #3d5fdd; }
+    .board-wrap {
+      display: flex;
+      justify-content: center;
+    }
+    .grid {
+      display: inline-grid;
+      grid-template-columns: repeat(10, 26px);
+      grid-template-rows: repeat(10, 26px);
+      gap: 3px;
+      background: var(--panel);
+      border: 1px solid #425184;
+      padding: 6px;
+      border-radius: 8px;
+    }
+    .cell {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      border: 1px solid #4a5988;
+      background: var(--tile-closed);
+      display: grid;
+      place-items: center;
+      user-select: none;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f1534;
+      cursor: pointer;
+    }
+    .cell.open {
+      background: var(--tile-open);
+      color: #2e335e;
+      cursor: default;
+    }
+    .cell.flag {
+      background: #f0ad4e !important;
+      color: #fff !important;
+    }
+    .mine { color: var(--mine) !important; }
+    .n1 { color: #1c7ed6; }
+    .n2 { color: #2f9e44; }
+    .n3 { color: #f03e3e; }
+    .n4 { color: #5c3f8d; }
+    .n5 { color: #7950f2; }
+    .n6 { color: #15aabf; }
+    .n7 { color: #212529; }
+    .n8 { color: #343a40; }
+    .links { margin-top: 12px; font-size: 13px; }
+    .links a { color: #85c2ff; }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>HTML5 扫雷</h1>
+    <p>支持左键翻格、右键插旗。用于验证小游戏可承载与交互事件。</p>
+    <div class="toolbar">
+      <button id="newBtn">新游戏</button>
+      <span>地雷数：<strong id="mineCount"></strong></span>
+      <span>剩余旗子：<strong id="leftFlag"></strong></span>
+      <span>状态：<strong id="stateText">进行中</strong></span>
+    </div>
+    <div class="board-wrap">
+      <div id="board" class="grid" aria-label="minesweeper board"></div>
+    </div>
+    <div class="links">
+      <a href="/games/">返回游戏空间</a>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const SIZE = 10
+      const MINES = 12
+      const boardEl = document.getElementById('board')
+      const mineCountEl = document.getElementById('mineCount')
+      const leftFlagEl = document.getElementById('leftFlag')
+      const stateText = document.getElementById('stateText')
+      const newBtn = document.getElementById('newBtn')
+
+      let cells = []
+      let gameOver = false
+      let flagged = 0
+      let opened = 0
+
+      function idx(x, y) { return y * SIZE + x }
+      function inRange(x, y) { return x >= 0 && x < SIZE && y >= 0 && y < SIZE }
+      function neighbors(x, y) {
+        const list = []
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (!dx && !dy) continue
+            const nx = x + dx, ny = y + dy
+            if (inRange(nx, ny)) list.push(cells[idx(nx, ny)])
+          }
+        }
+        return list
+      }
+
+      function newGame() {
+        cells = []
+        boardEl.innerHTML = ''
+        gameOver = false
+        flagged = 0
+        opened = 0
+        mineCountEl.textContent = String(MINES)
+        leftFlagEl.textContent = String(MINES)
+        stateText.textContent = '进行中'
+
+        for (let i = 0; i < SIZE * SIZE; i++) {
+          const x = i % SIZE
+          const y = Math.floor(i / SIZE)
+          const cell = {
+            x,
+            y,
+            mine: false,
+            open: false,
+            flag: false,
+            num: 0,
+            el: document.createElement('button')
+          }
+          cell.el.className = 'cell'
+          cell.el.dataset.i = String(i)
+          cell.el.addEventListener('click', () => openCell(cell))
+          cell.el.addEventListener('contextmenu', (e) => {
+            e.preventDefault()
+            toggleFlag(cell)
+          })
+          boardEl.appendChild(cell.el)
+          cells.push(cell)
+        }
+
+        const mineIndexes = new Set()
+        while (mineIndexes.size < MINES) {
+          mineIndexes.add(Math.floor(Math.random() * cells.length))
+        }
+        mineIndexes.forEach(i => { cells[i].mine = true })
+
+        cells.forEach(c => {
+          if (c.mine) return
+          c.num = neighbors(c.x, c.y).filter(n => n.mine).length
+        })
+      }
+
+      function toggleFlag(cell) {
+        if (gameOver || cell.open) return
+        if (cell.flag) {
+          cell.flag = false
+          cell.el.classList.remove('flag')
+          cell.el.textContent = ''
+          flagged -= 1
+        } else {
+          if (flagged >= MINES) return
+          cell.flag = true
+          cell.el.classList.add('flag')
+          cell.el.textContent = '🚩'
+          flagged += 1
+        }
+        leftFlagEl.textContent = String(MINES - flagged)
+      }
+
+      function checkWin() {
+        return opened === (SIZE * SIZE - MINES)
+      }
+
+      function reveal(cell) {
+        if (cell.open || cell.flag) return
+        cell.open = true
+        opened += 1
+        cell.el.classList.add('open')
+        if (cell.mine) {
+          cell.el.textContent = '💣'
+          cell.el.classList.add('mine')
+          gameOver = true
+          stateText.textContent = '踩雷了'
+          revealAll()
+          return
+        }
+        if (cell.num > 0) {
+          cell.el.textContent = String(cell.num)
+          cell.el.classList.add('n' + cell.num)
+        } else {
+          neighbors(cell.x, cell.y).forEach(openCell)
+          return
+        }
+        if (checkWin() && !gameOver) {
+          gameOver = true
+          stateText.textContent = '你赢了！'
+        }
+      }
+
+      function openCell(cellOrIdx) {
+        if (gameOver) return
+        const cell = typeof cellOrIdx === 'number' ? cells[cellOrIdx] : cellOrIdx
+        reveal(cell)
+      }
+
+      function revealAll() {
+        cells.forEach(c => {
+          if (c.mine) {
+            c.el.classList.add('open', 'mine')
+            c.el.textContent = '💣'
+          } else {
+            if (c.open) return
+            c.el.classList.add('open')
+            if (c.num > 0) {
+              c.el.textContent = String(c.num)
+              c.el.classList.add('n' + c.num)
+            }
+          }
+        })
+      }
+
+      newBtn.addEventListener('click', newGame)
+      newGame()
+    })()
+  </script>
+</body>
+</html>

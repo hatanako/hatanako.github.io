@@ -1,0 +1,94 @@
+【添加游戏目录说明（放置于 source/games/）】
+
+目标：
+1) 能快速在博客上发布小游戏
+2) 同时支持独立游戏入口和博客文章引用
+
+一、目录结构（推荐）
+在 source/games 下创建一个唯一目录，例如：
+
+source/games/
+  ├─ snake/                 # 游戏 ID（示例）
+  │  ├─ index.html
+  │  ├─ main.js（可选）
+  │  ├─ style.css（可选）
+  │  └─ assets/（可选）
+  ├─ my-unity-game/
+  │  ├─ index.html
+  │  ├─ Build/
+  │  └─ TemplateData/
+  └─ games.json
+
+二、必须满足的步骤
+1. 新建游戏目录
+   - 路径必须是：source/games/你的游戏id/
+   - 至少有可直接打开的 index.html（这是 iframe 入口）
+
+2. 更新游戏清单
+   编辑：source/games/games.json
+   追加一条记录（推荐字段如下）：
+
+   {
+     "id": "snake",
+     "title": "HTML5 贪吃蛇",
+     "shortDesc": "方向键/WASD 控制的经典贪吃蛇",
+     "description": "游戏详细说明",
+     "path": "/games/snake/",
+     "tags": ["Canvas","休闲","JS"],
+     "controls": "方向键或 WASD",
+     "difficulty": "简单",
+     "updatedAt": "2026-05-12"
+   }
+
+   说明：
+   - id 与目录名必须一致
+   - path 为最终访问路径，必须以斜杠结尾
+   - 这是“游戏详情页”读取内容的唯一数据源
+
+3. 列表展示
+   - 游戏空间列表页面：source/games/index.md
+   - 已默认支持读取 games.json 动态渲染卡片
+
+4. 详情页自动可用
+   - 访问方式：/games/detail/?id=你的游戏id
+   - 详情页会自动读取 games.json 并加载对应游戏 iframe
+
+三、Unity WebGL 添加方式（推荐）
+1. 在 Unity 导出 WebGL 时保留：
+   - Build/
+   - TemplateData/
+   - index.html
+2. 将上述内容放进：source/games/<游戏id>/
+3. 确认 games.json path 为 "/games/<游戏id>/"
+4. 推送到仓库后通过 GitHub Actions 自动发布
+
+四、如何在博客文章里引用游戏
+在 source/_posts/.../*.md 写文章时加入链接：
+
+- 推荐链接1（详情页）：[游玩：游戏名](/games/detail/?id=<游戏id>)
+- 推荐链接2（直接页内）：[直接打开游戏](/games/<游戏id>/)
+
+如果需要“文章内嵌展示”，可用 iframe（博客模板可能对 iframe 有限制，按实际页面样式测试）：
+
+<iframe src="/games/<游戏id>/" width="100%" height="620" style="border:1px solid #2d3565;border-radius:8px;"></iframe>
+
+五、发布与容量建议
+- 站点是静态站点，新增文件会随 Hexo 直接发布到 Pages。
+- Unity 文件较大时建议：
+  1）优先压缩素材（图片、音频）
+  2）控制单文件过大（避免单文件 >100MB）
+  3）必要时放外部 CDN，再在页面内加载外部资源
+
+六、常见问题
+Q：新游戏在详情页打开 404？
+- 检查 id 与目录名一致
+- 检查 games.json 的 path 是否正确
+- 检查目录是否推送成功且 publish 后路径实际存在
+
+Q：游戏页能直接在列表点击吗？
+- 列表卡片支持点击详情页（/games/detail/?id=xxx）
+- 若想直接打开游戏，也可在 index.md 手动加卡片链接到 /games/<游戏id>/
+
+Q：能否放“乱七八糟东西”？
+- 只要是可在浏览器运行的静态内容都可以（JS、CSS、HTML、Unity WebGL、小游戏 demo）
+- 但建议避免体积过大/第三方依赖过重，防止 Pages 发布变慢

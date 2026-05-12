@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏详情</title>
+  <style>
+    :root {
+      --bg: #0b1024;
+      --panel: rgba(20, 28, 56, 0.88);
+      --card: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.15);
+      --text: #edf2ff;
+      --link: #88b4ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at 10% 10%, #1b2450 0%, #090d1f 55%, #060910 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .page {
+      width: min(980px, 100%);
+      background: rgba(15, 19, 39, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1 { margin: 4px 0 8px; font-size: 26px; }
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      font-size: 14px;
+      color: #c4cae9;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 2px 8px;
+      margin-right: 6px;
+      font-size: 12px;
+    }
+    .desc {
+      color: #d8ddff;
+      margin: 8px 0 10px;
+      line-height: 1.7;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      background: #2b55c9;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .btn:hover {
+      background: #3b69e6;
+    }
+    .btn.secondary {
+      background: #364069;
+    }
+    .btn.secondary:hover {
+      background: #475286;
+    }
+    iframe {
+      width: 100%;
+      height: 560px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .hint {
+      margin-top: 12px;
+      color: #9ea6ca;
+      font-size: 13px;
+    }
+    .other-list {
+      margin-top: 16px;
+    }
+    .item {
+      padding: 8px 0;
+      border-top: 1px dashed #27305c;
+    }
+    .item a {
+      color: var(--link);
+      text-decoration: none;
+    }
+    .item a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="header">
+      <div>
+        <h1 id="title">游戏详情</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <a class="btn secondary" href="/games/">返回游戏空间</a>
+    </div>
+    <p class="desc" id="desc"></p>
+    <div class="actions">
+      <a id="playBtn" class="btn" href="#">开始游戏</a>
+      <a id="rawBtn" class="btn secondary" href="#">直接进入</a>
+    </div>
+    <iframe id="gameFrame" src="about:blank" title="game embed frame"></iframe>
+    <div class="hint" id="hint"></div>
+
+    <section class="other-list" id="other"></section>
+  </main>
+
+  <script>
+    (async () => {
+      const params = new URLSearchParams(location.search)
+      const gameId = params.get('id') || params.get('game') || 'snake'
+      const fallback = params.get('id') || 'snake'
+      const resp = await fetch('../games.json')
+      if (!resp.ok) {
+        document.getElementById('title').textContent = '加载游戏列表失败'
+        return
+      }
+      const games = await resp.json()
+      const game = games.find((g) => String(g.id) === String(gameId)) || games.find((g) => g.id === fallback)
+
+      if (!game) {
+        document.getElementById('title').textContent = '未找到该游戏'
+        document.getElementById('desc').textContent = '请从游戏空间列表进入，或检查链接中的 id。'
+        return
+      }
+
+      const title = document.getElementById('title')
+      const meta = document.getElementById('meta')
+      const desc = document.getElementById('desc')
+      const playBtn = document.getElementById('playBtn')
+      const rawBtn = document.getElementById('rawBtn')
+      const frame = document.getElementById('gameFrame')
+      const hint = document.getElementById('hint')
+      const other = document.getElementById('other')
+
+      title.textContent = game.title
+      desc.textContent = game.description || game.shortDesc || ''
+      const tags = Array.isArray(game.tags) ? game.tags : []
+      meta.innerHTML = `
+        <span>难度：${game.difficulty || '未知'}</span>
+        <span>操作：${game.controls || '未知'}</span>
+        <span>更新时间：${game.updatedAt || '未标注'}</span>
+      `
+      tags.forEach((t) => {
+        const tag = document.createElement('span')
+        tag.className = 'tag'
+        tag.textContent = t
+        meta.appendChild(tag)
+      })
+
+      const path = game.path.endsWith('/') ? game.path : game.path + '/'
+      playBtn.href = path
+      rawBtn.href = path
+      frame.src = path
+      hint.textContent = '提示：若首次加载较慢，请等待 2-3 秒后刷新。'
+
+      const listTitle = document.createElement('h3')
+      listTitle.textContent = '你也可以看这些'
+      other.appendChild(listTitle)
+      games.forEach((g) => {
+        if (g.id === game.id) return
+        const div = document.createElement('div')
+        div.className = 'item'
+        div.innerHTML = `<a href="/games/detail/?id=${encodeURIComponent(g.id)}">▶ ${g.title}</a> ｜ ${g.shortDesc || ''}`
+        other.appendChild(div)
+      })
+    })()
+  </script>
+</body>
+</html>
